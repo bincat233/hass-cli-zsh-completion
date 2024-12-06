@@ -1,0 +1,307 @@
+#compdef hass-cli
+
+local context state line
+typeset -A opt_args
+
+_arguments -C \
+  '(-l --loglevel)'{-l,--loglevel}'[Set log level]:loglevel:(CRITICAL ERROR WARNING INFO DEBUG)' \
+  '--version[Show the version and exit]' \
+  '(-s --server)'{-s,--server}'[Set the server URL or auto for auto-detection]' \
+  '--token[Set the Bearer token for Home Assistant instance]' \
+  '--password[Set the API password for Home Assistant instance]' \
+  '--timeout[Set timeout for network operations]:timeout (seconds)' \
+  '(-o --output)'{-o,--output}'[Set output format]:output format:(json yaml table auto ndjson)' \
+  '-v[Enable verbose mode]' \
+  '-x[Print backtraces when exceptions occur]' \
+  '--cert[Set path to client certificate file (.pem)]' \
+  '--insecure[Ignore SSL certificates]' \
+  '--debug[Enable debug mode]' \
+  '--columns[Define custom columns]:key=value list' \
+  '--no-headers[Disable headers in table output]' \
+  '--table-format[Set table format]:table format' \
+  '--sort-by[Sort table by jsonpath expression]:jsonpath' \
+  '--help[Show help message and exit]' \
+  '1:command:->command' \
+  '2:subcommand:->subcommand' \
+  '3:level 2 subcommand:->l2subcommand'
+
+if [[ $state == command ]]; then
+  local commands=(
+    'area:Get info and operate on areas'
+    'config:Get configuration from Home Assistant'
+    'device:Get info and operate on devices'
+    'discover:Discover devices on the local network'
+    'entity:Get info on entities'
+    'event:Interact with events'
+    'ha:Home Assistant (former Hass.io) commands'
+    'map:Show config or entity location on a map'
+    'raw:Call the raw API'
+    'service:Call and work with services'
+    'state:Get info on entity state'
+    'system:Show system details and operations'
+    'template:Render templates'
+  )
+  _describe 'commands' commands && return
+fi
+
+
+if [[ $state == subcommand ]]; then
+  case $words[2] in
+    area)
+      local subcommands=(
+        'create:Create an area'
+        'delete:Delete an area'
+        'list:List all areas'
+        'rename:Rename an area'
+      )
+      _describe 'area commands' subcommands
+      ;;
+    config)
+      local subcommands=(
+        'components:Get loaded components'
+        'full:Get full configuration details'
+        'release:Get Home Assistant release info'
+        'whitelist-dirs:Get whitelisted directories'
+      )
+      _describe 'config commands' subcommands
+      ;;
+    device)
+      local subcommands=(
+        'assign:Update area for devices'
+        'list:List all devices'
+        'rename:Update device name'
+      )
+      _describe 'device commands' subcommands
+      ;;
+    entity)
+      local subcommands=(
+        'assign:Update area for entities'
+        'list:List all entities'
+        'rename:Rename an entity'
+      )
+      _describe 'entity commands' subcommands
+      ;;
+    event)
+      local subcommands=(
+        'fire:Fire an event'
+        'watch:Subscribe and print events'
+      )
+      _describe 'event commands' subcommands
+      ;;
+    ha)
+      local subcommands=(
+        'addons:Manage addons'
+        'core:Manage Home Assistant core'
+      )
+      _describe 'ha commands' subcommands
+      ;;
+    raw)
+      local subcommands=(
+        'get:Perform a GET request'
+        'post:Perform a POST request'
+        'ws:Send a websocket request'
+      )
+      _describe 'raw commands' subcommands
+      ;;
+    service)
+      local subcommands=(
+        'call:Call a service'
+        'list:List all services'
+      )
+      _describe 'service commands' subcommands
+      ;;
+    state)
+      local subcommands=(
+        'delete:Delete entity state'
+        'edit:Edit entity state'
+        'get:Get entity state'
+        'history:Get state history'
+        'list:List all states'
+        'toggle:Toggle entity state'
+        'turn_off:Turn an entity off'
+        'turn_on:Turn an entity on'
+      )
+      _describe 'state commands' subcommands
+      ;;
+    system)
+      local subcommands=(
+        'health:Get system health'
+        'log:Get system logs'
+      )
+      _describe 'system commands' subcommands
+      ;;
+    template)
+      _message 'Specify a template to render'
+      ;;
+    *)
+      :
+      ;;
+    esac
+fi
+
+if [[ $state == l2subcommand ]]; then
+  case $words[2] in
+    area)
+      case $words[3] in
+        create)
+          :
+          ;;
+        delete)
+          :
+          ;;
+          list)
+          :
+          ;;
+          rename)
+          :
+          ;;
+      esac
+      ;;
+    config)
+      case $words[3] in
+        components)
+        :
+        ;;
+        full)
+        :
+        ;;
+        release)
+        :
+        ;;
+        whitelist-dirs)
+        :
+        ;;
+      esac
+      ;;
+    device)
+      case $words[3] in
+      assign)
+      :
+      ;;
+      list)
+      :
+      ;;
+      rename)
+      :
+      ;;
+      esac
+      ;;
+    entity)
+      case $words[3] in
+        assign)
+          :
+          ;;
+        list)
+          :
+          ;;
+        rename)
+          :
+          ;;
+      esac
+      ;;
+    event)
+      case $words[3] in
+        fire)
+          :
+          ;;
+        watch)
+          :
+          ;;
+      esac
+      ;;
+    ha)
+      case $words[3] in
+        addons )
+          local subcommands=(
+            'all:     Home Assistant addons info'
+            'reload:  Home Assistant addons reload'
+          )
+          _describe 'subcommands' subcommands
+          ;;
+        core )
+          local subcommands=(
+            'check:      Home Assistant core check'
+            'info:       Home Assistant core info'
+            'logs:       Home Assistant core logs'
+            'options:    Home Assistant core options'
+            'rebuild:    Home Assistant core rebuild'
+            'restart:    Home Assistant core restart'
+            'start:      Home Assistant core start'
+            'stats:      Home Assistant core stats'
+            'stop:       Home Assistant core stop'
+            'update:     Home Assistant core update'
+            'websocket:  Home Assistant core websocket'
+          )
+          _describe 'subcommands' subcommands
+          ;;
+      esac
+      ;;
+    raw)
+      case $words[3] in
+        get )
+          :
+          ;;
+        post )
+          :
+          ;;
+        ws )
+          :
+          ;;
+      esac
+      ;;
+    service)
+      case $words[3] in
+        call )
+          :
+          ;;
+        list )
+          :
+          ;;
+      esac
+      ;;
+    state)
+      case $words[3] in
+        delete )
+          :
+          ;;
+        edit )
+          :
+          ;;
+        get )
+          :
+          ;;
+        history )
+          :
+          ;;
+        list )
+          :
+          ;;
+        toggle )
+          :
+          ;;
+        turn_off )
+          :
+          ;;
+        turn_on )
+          :
+          ;;
+      esac
+      ;;
+    system)
+      case $words[3] in
+        health )
+          :
+          ;;
+        log )
+          :
+          ;;
+      esac
+      ;;
+    template)
+      :
+      ;;
+    *)
+      :
+      ;;
+  esac
+fi
